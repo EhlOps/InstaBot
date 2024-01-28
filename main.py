@@ -1,3 +1,5 @@
+# By Sam Ehlers
+
 from selenium import webdriver
 from pages import Bot
 import os
