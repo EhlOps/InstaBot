@@ -1,0 +1,63 @@
+from time import sleep
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+import random
+import progressbar
+
+class Bot:
+    def __init__(self, browser):
+        self.browser = browser
+        self.browser.get('https://www.instagram.com/')
+
+    def login(self, username, password):
+        self.browser.find_element(By.NAME, "username").send_keys(username)
+        self.browser.find_element(By.NAME, "password").send_keys(password)
+        self.browser.find_element(By.XPATH, "//button[@type='submit']").click()
+        self.browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div/div/div/div").click()
+        self.browser.find_element(By.XPATH, "/html/body/div[3]/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[3]/button[2]").click()
+        print("\nSuccessfully logged in to Instagram...")
+        
+    def send_messages(self, namelist=[], message="This is a test message."):
+        print("\n")
+        bar = progressbar.ProgressBar(maxval=20 if len(namelist) > 20 else len(namelist), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+        bar.start()
+        num = 0
+        bar_value = 0
+        updates = list(range(0, len(namelist), len(namelist)//20 if len(namelist) > 20 else 1))
+        updates.append(len(namelist))
+        for name in namelist:
+            self.browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[1]/div/div/div/div/div[2]/div[5]/div/div/div/span/div/a/div").click()
+            self.browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/div/div/div/div[1]/div/div[1]/div/div[1]/div[2]/div/div").click()
+            ActionChains(self.browser)\
+            .pause(1)\
+            .send_keys("@" + name)\
+            .send_keys(Keys.RETURN)\
+            .perform()
+            element = self.browser.find_element(By.XPATH, "/html/body/div[6]/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[3]/div/div")
+            sleep(2)
+            elements = element.find_elements(By.TAG_NAME, "div")
+            elements_text = [text.split("\n")[1] for text in [element.text for element in elements][::15]]
+            # 'bria black🌷\nbriacblack', 'bria black🌷\nbriacblack', 'bria black🌷\nbriacblack', 'bria black🌷\nbriacblack', '', '', 'bria black🌷\nbriacblack', 'bria black🌷\nbriacblack', 'bria black🌷\nbriacblack', 'bria black🌷', '', '', '', '', '', 'BRIA BLACK\nbriablack'
+            element = None
+            for i in range(len(elements_text)):
+                if elements_text[i] == name:
+                    element = elements[i*15]
+                    break
+            assert element is not None, 'Invalid username in list of usernames'
+            element.click()
+            self.browser.find_element(By.XPATH, "/html/body/div[6]/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[4]/div").click()
+            ActionChains(self.browser)\
+            .pause(1)\
+            .send_keys(message)\
+            .send_keys(Keys.RETURN)\
+            .perform()
+            num += 1
+            if num in updates:
+                bar_value += 1
+                bar.update(bar_value)
+            sleep(10)
+            self.browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[1]/div/div/div/div/div[2]/div[1]/div/span/div/a/div").click()
+            sleep(5 + random.randint(0,20))
+        
+        print(f"\n\nFinished.\n{len(namelist)} messages sent.\n")
