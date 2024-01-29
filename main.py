@@ -1,10 +1,10 @@
 # By Sam Ehlers
 
-from selenium import webdriver
-from pages import Bot
 import os
 from absl import app
 from absl import flags
+from selenium import webdriver
+from pages import Bot
 
 FLAGS = flags.FLAGS
 flags.DEFINE_string("username", None, "Username")
@@ -27,10 +27,10 @@ def main(argv):
     usr =  FLAGS.username
     passwd =  FLAGS.password
 
-    with open(os.path.join(FLAGS.users_file), 'r') as f:
+    with open(os.path.join(FLAGS.users_file), 'r', encoding='UTF-8') as f:
         users = f.read().splitlines()
 
-    with open(os.path.join(FLAGS.message_file), 'r') as f:
+    with open(os.path.join(FLAGS.message_file), 'r', encoding='UTF-8') as f:
         message = f.read()
 
     bot = Bot(browser)

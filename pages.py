@@ -19,6 +19,8 @@ class Bot:
         print("\nSuccessfully logged in to Instagram...")
         
     def send_messages(self, namelist=[], message="This is a test message."):
+        message = message.splitlines()
+
         print("\n")
         bar = progressbar.ProgressBar(maxval=20 if len(namelist) > 20 else len(namelist), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
         bar.start()
@@ -47,17 +49,34 @@ class Bot:
             assert element is not None, 'Invalid username in list of usernames'
             element.click()
             self.browser.find_element(By.XPATH, "/html/body/div[6]/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[4]/div").click()
+            for mes in message:
+                if mes == "/NEWMESSAGE":
+                    ActionChains(self.browser)\
+                    .pause(1)\
+                    .send_keys(Keys.RETURN)\
+                    .perform()
+                else:
+                    ActionChains(self.browser)\
+                    .pause(1)\
+                    .send_keys(mes)\
+                    .key_down(Keys.SHIFT)\
+                    .send_keys(Keys.RETURN)\
+                    .key_up(Keys.SHIFT)\
+                    .perform()
             ActionChains(self.browser)\
-            .pause(1)\
-            .send_keys(message)\
-            .send_keys(Keys.RETURN)\
-            .perform()
+                    .pause(1)\
+                    .send_keys(Keys.RETURN)\
+                    .perform()
+                
             num += 1
             if num in updates:
                 bar_value += 1
                 bar.update(bar_value)
+            if num == len(namelist):
+                print(f"\n\nFinished.\n{len(namelist)} messages sent.\n")
+                exit()
             sleep(10)
             self.browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[1]/div/div/div/div/div[2]/div[1]/div/span/div/a/div").click()
-            sleep(5 + random.randint(0,20))
-        
-        print(f"\n\nFinished.\n{len(namelist)} messages sent.\n")
+            sleep(10 + random.randint(0,20))
+            if num % 10 == 0:
+                sleep(2 * 3600)
