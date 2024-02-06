@@ -19,7 +19,7 @@ def main(argv):
     del argv
 
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless=new")
+    #options.add_argument("--headless=new")
 
     browser = webdriver.Chrome(options=options)
     browser.implicitly_wait(5)

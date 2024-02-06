@@ -42,13 +42,13 @@ class Bot:
             elements_text = [text.split("\n")[1] for text in [element.text for element in elements][::15]]
             # 'bria black🌷\nbriacblack', 'bria black🌷\nbriacblack', 'bria black🌷\nbriacblack', 'bria black🌷\nbriacblack', '', '', 'bria black🌷\nbriacblack', 'bria black🌷\nbriacblack', 'bria black🌷\nbriacblack', 'bria black🌷', '', '', '', '', '', 'BRIA BLACK\nbriablack'
             element = None
-            for i in range(len(elements_text)):
-                if elements_text[i] == name:
+            for (i, e) in enumerate(elements_text):
+                if e == name:
                     element = elements[i*15]
                     break
             assert element is not None, 'Invalid username in list of usernames'
             element.click()
-            self.browser.find_element(By.XPATH, "/html/body/div[6]/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[4]/div").click()
+            self.browser.find_element(By.XPATH, "/html/body/div[6]/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[4]").click()
             for mes in message:
                 if mes == "/NEWMESSAGE":
                     ActionChains(self.browser)\
