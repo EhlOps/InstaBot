@@ -7,7 +7,7 @@ To run InstaBot, first clone this repo:
 `git clone https://github.com/EhlOps/InstaBot.git`
 
 Then installt the dependencies for the project:
-`pip install -r requirements. txt`
+`pip install -r requirements.txt`
 
 Finally, you will want to run the `main` script. You can do this by running:
 `python main.py --username=YOUR_USERNAME --password=YOURPASSWORD`
