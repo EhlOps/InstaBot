@@ -10,15 +10,28 @@ class Bot:
         self.browser = browser
         self.browser.get('https://www.instagram.com/')
 
-    def login(self, username, password):
+    def login(self, username, password) -> None:
         self.browser.find_element(By.NAME, "username").send_keys(username)
         self.browser.find_element(By.NAME, "password").send_keys(password)
         self.browser.find_element(By.XPATH, "//button[@type='submit']").click()
+        sleep(2)
         self.browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/section/main/div/div/div/div/div").click()
         self.browser.find_element(By.XPATH, "/html/body/div[3]/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[3]/button[2]").click()
         print("\nSuccessfully logged in to Instagram...")
         
-    def send_messages(self, namelist=[], message="This is a test message."):
+    def send_messages(self, namelist=None, message="This is a test message.") -> None:
+        """
+        Sends messages to a list of Instagram usernames.
+
+        Args:
+            namelist (list): List of Instagram usernames to send messages to. Defaults to an empty list.
+            message (str): The message to send. Defaults to "This is a test message."
+
+        Returns:
+            None
+        """
+        if namelist is None:
+            namelist = []
         message = message.splitlines()
 
         print("\n")
@@ -73,6 +86,7 @@ class Bot:
                 bar_value += 1
                 bar.update(bar_value)
             if num == len(namelist):
+                sleep(2)
                 print(f"\n\nFinished.\n{len(namelist)} messages sent.\n")
                 exit()
             sleep(10)
